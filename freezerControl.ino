@@ -55,20 +55,20 @@ void setup(void)
   Serial.println("Kegerator controller");
 
   // Start up the library
-  //sensors.begin();
+  sensors.begin();
 }
  
 void loop(void)
 {
   // call sensors.requestTemperatures() to issue a global temperature
   // request to all devices on the bus
-  //Serial.print(" Requesting temperatures...");
-  //sensors.requestTemperatures(); // Send the command to get temperatures
-  //Serial.println("DONE");
+  Serial.print(" Requesting temperatures...");
+  sensors.requestTemperatures(); // Send the command to get temperatures
+  Serial.println("DONE");
 
-  //Serial.print("Temperature is: ");
-  //temperature = sensors.getTempCByIndex(0);
-  //Serial.println(temperature);
+  Serial.print("Temperature is: ");
+  temperature = sensors.getTempCByIndex(0);
+  Serial.println(temperature);
 
 //  if (minTemp > temperature) {
 //    minTemp = temperature;
@@ -106,7 +106,7 @@ void loop(void)
 //  Serial.println(maxTemp);
 //  
   delay(1000 * 1);
-  println("Test");
+  Serial.println("Test");
 
 
 }
