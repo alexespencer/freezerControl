@@ -1,8 +1,19 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
- 
-// Data wire is plugged into pin 2 on the Arduino
-#define ONE_WIRE_BUS 2
+
+//********************PIN CONFIG************************
+// Data wire is plugged into pin 8 on the Arduino
+#define ONE_WIRE_BUS 8 //Pin 2 is used by LCD now
+#define RELAY_PIN 9    //Pin controlling the relay      
+#define LED_PIN 13     //LED pin
+#define DIAL_PIN 1     //Analog pin to read Dial setting
+//******************************************************
+
+//********************PARAMETERS************************
+#define DIAL_LOW 912
+#define DIAL_HIGH 183
+
+//******************************************************
 
 // Setup a oneWire instance to communicate with any OneWire devices 
 // (not just Maxim/Dallas temperature ICs)
@@ -10,9 +21,6 @@ OneWire oneWire(ONE_WIRE_BUS);
  
 // Pass our oneWire reference to Dallas Temperature.
 DallasTemperature sensors(&oneWire);
- 
-int relayPin =  4; //Pin controlling the relay      
-int ledPin = 13;
 
 unsigned long lastCycledTime; //Stores the last time cycled
 unsigned long cycleDelta; //Stores the min allowed cycle time (10 minutes?)
@@ -33,7 +41,7 @@ void setup(void)
 {
   // Set up pins
   //pinMode(relayPin, OUTPUT);
-  pinMode(ledPin, OUTPUT);
+  pinMode(LED_PIN, OUTPUT);
 
   //forceTurnCompressorOff(); //Ensure the compress is off
 
@@ -62,13 +70,19 @@ void loop(void)
 {
   // call sensors.requestTemperatures() to issue a global temperature
   // request to all devices on the bus
-  Serial.print(" Requesting temperatures...");
-  sensors.requestTemperatures(); // Send the command to get temperatures
-  Serial.println("DONE");
+  //Serial.print(" Requesting temperatures...");
+  //sensors.requestTemperatures(); // Send the command to get temperatures
+  //Serial.println("DONE");
 
-  Serial.print("Temperature is: ");
-  temperature = sensors.getTempCByIndex(0);
-  Serial.println(temperature);
+  //Serial.print("Temperature is: ");
+  //temperature = sensors.getTempCByIndex(0);
+  //Serial.println(temperature);
+
+  //Read the Dials setting
+  Serial.print("Raw: ");
+  Serial.print(getDialRaw());
+  Serial.print("  Dial set temp: ");
+  Serial.println(getDialTemperature());
 
 //  if (minTemp > temperature) {
 //    minTemp = temperature;
@@ -105,10 +119,7 @@ void loop(void)
 //  Serial.print("  Max temperature: ");
 //  Serial.println(maxTemp);
 //  
-  delay(1000 * 1);
-  Serial.println("Test");
-
-
+  delay(250 * 1);
 }
 
 void turnCompressorOn(){
@@ -116,8 +127,8 @@ void turnCompressorOn(){
     lastCycledTime = millis();
     relayState=LOW;
     beenOn = 1;
-    digitalWrite(relayPin,relayState);
-    digitalWrite(ledPin,!relayState);
+    digitalWrite(RELAY_PIN,relayState);
+    digitalWrite(LED_PIN,!relayState);
     Serial.println("Compressor turned ON");
   }
   else {
@@ -132,8 +143,8 @@ void turnCompressorOff(){
   if (millis() - lastCycledTime > cycleDelta){
     lastCycledTime = millis();
     relayState=HIGH;
-    digitalWrite(relayPin,relayState);
-    digitalWrite(ledPin,!relayState);
+    digitalWrite(RELAY_PIN,relayState);
+    digitalWrite(LED_PIN,!relayState);
     Serial.println("Compressor turned OFF");
   }
   else {
@@ -147,9 +158,17 @@ void turnCompressorOff(){
 void forceTurnCompressorOff(){
   lastCycledTime = millis();
   relayState=HIGH;
-  digitalWrite(relayPin,relayState);
-  digitalWrite(ledPin,!relayState);
+  digitalWrite(RELAY_PIN,relayState);
+  digitalWrite(LED_PIN,!relayState);
   Serial.println("Compressor turned OFF");
+}
+
+int getDialRaw(){
+  return analogRead(DIAL_PIN);
+}
+
+float getDialTemperature(){
+  return map(constrain(getDialRaw(), 610, 1023), 1023, 610, 0, 200) / 10.0;
 }
  
 boolean isCompressorOff(){
