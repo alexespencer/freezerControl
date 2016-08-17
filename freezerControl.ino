@@ -3,15 +3,18 @@
 
 //********************PIN CONFIG************************
 // Data wire is plugged into pin 8 on the Arduino
-#define ONE_WIRE_BUS 8 //Pin 2 is used by LCD now
-#define RELAY_PIN 9    //Pin controlling the relay      
-#define LED_PIN 13     //LED pin
-#define DIAL_PIN 1     //Analog pin to read Dial setting
+#define ONE_WIRE_BUS 8 // Pin 2 is used by LCD now
+#define RELAY_PIN 9    // Pin controlling the relay      
+#define LED_PIN 13     // LED pin
+#define DIAL_PIN 1     // Analog pin to read Dial setting
 //******************************************************
 
 //********************PARAMETERS************************
-#define DIAL_LOW 912
+#define DIAL_LOW 1023
 #define DIAL_HIGH 183
+
+#define SET_TEMP_LOW 0      // Min temperature (times by 10)
+#define SET_TEMP_HIGH 200   // Max temperature (times by 10)
 
 //******************************************************
 
@@ -22,16 +25,16 @@ OneWire oneWire(ONE_WIRE_BUS);
 // Pass our oneWire reference to Dallas Temperature.
 DallasTemperature sensors(&oneWire);
 
-unsigned long lastCycledTime; //Stores the last time cycled
-unsigned long cycleDelta; //Stores the min allowed cycle time (10 minutes?)
+unsigned long lastCycledTime; // Stores the last time cycled
+unsigned long cycleDelta; // Stores the min allowed cycle time (10 minutes?)
 
 float temperature;
 
-float minTemp; //Tracks min and max temp
+float minTemp; // Tracks min and max temp
 float maxTemp;
 
-float tempSetPoint; //Target temperature
-float tempDelta; //The delta for the temperature cutoff
+float tempSetPoint; // Target temperature
+float tempDelta; // The delta for the temperature cutoff
  
 int relayState;
 
@@ -168,7 +171,7 @@ int getDialRaw(){
 }
 
 float getDialTemperature(){
-  return map(constrain(getDialRaw(), 610, 1023), 1023, 610, 0, 200) / 10.0;
+  return map(constrain(getDialRaw(), DIAL_HIGH, DIAL_LOW), DIAL_LOW, DIAL_HIGH, SET_TEMP_LOW, SET_TEMP_HIGH) / 10.0;
 }
  
 boolean isCompressorOff(){
