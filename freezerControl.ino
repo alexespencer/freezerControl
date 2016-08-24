@@ -20,7 +20,7 @@
 //******************************************************
 
 // Declare Liquid Crystal Display
-LiquidCrystal lcd(7, 6, 5, 4, 3, 2);
+LiquidCrystal lcd(7, 6, 5, 4, 3, 2); //Using 1602A LCD screen
 
 // Setup a oneWire instance to communicate with any OneWire devices 
 // (not just Maxim/Dallas temperature ICs)
@@ -191,9 +191,8 @@ boolean isCompressorOn(){
 }
 
 void lcdTest(){
-  lcd.setCursor(0,0);
+  lcd.setCursor(0,0); // Set cursor to first row left
   lcd.print("Ruth is lovely");
-  lcd.setCursor(0,2);
-  lcd.print(millis()/1000);
+  lcd.setCursor(0,2); // Set cursor to second row left
 }
 
