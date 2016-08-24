@@ -1,5 +1,6 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
+#include <LiquidCrystal.h>
 
 //********************PIN CONFIG************************
 // Data wire is plugged into pin 8 on the Arduino
@@ -17,6 +18,9 @@
 #define SET_TEMP_HIGH 200   // Max temperature (times by 10)
 
 //******************************************************
+
+// Declare Liquid Crystal Display
+LiquidCrystal lcd(7, 6, 5, 4, 3, 2);
 
 // Setup a oneWire instance to communicate with any OneWire devices 
 // (not just Maxim/Dallas temperature ICs)
@@ -42,6 +46,9 @@ int beenOn;
 
 void setup(void)
 {
+  // Initialise LCD display
+  lcd.begin(16, 2);
+  
   // Set up pins
   //pinMode(relayPin, OUTPUT);
   pinMode(LED_PIN, OUTPUT);
@@ -71,6 +78,7 @@ void setup(void)
  
 void loop(void)
 {
+  lcdTest();
   // call sensors.requestTemperatures() to issue a global temperature
   // request to all devices on the bus
   //Serial.print(" Requesting temperatures...");
@@ -181,3 +189,11 @@ boolean isCompressorOff(){
 boolean isCompressorOn(){
   return !isCompressorOff();
 }
+
+void lcdTest(){
+  lcd.setCursor(0,0);
+  lcd.print("Ruth is lovely");
+  lcd.setCursor(0,2);
+  lcd.print(millis()/1000);
+}
+
