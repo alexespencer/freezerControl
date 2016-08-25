@@ -8,6 +8,7 @@
 #define RELAY_PIN 9    // Pin controlling the relay      
 #define LED_PIN 13     // LED pin
 #define DIAL_PIN 1     // Analog pin to read Dial setting
+#define SWITCH_3WAY A0 // Analogue PIN for the 3 way switch
 //******************************************************
 
 //********************PARAMETERS************************
@@ -79,6 +80,10 @@ void setup(void)
 void loop(void)
 {
   lcdTest();
+
+  Serial.print("Switch setting: ");
+  Serial.println(switchSetting());
+  
   // call sensors.requestTemperatures() to issue a global temperature
   // request to all devices on the bus
   //Serial.print(" Requesting temperatures...");
@@ -90,10 +95,10 @@ void loop(void)
   //Serial.println(temperature);
 
   //Read the Dials setting
-  Serial.print("Raw: ");
-  Serial.print(getDialRaw());
-  Serial.print("  Dial set temp: ");
-  Serial.println(getDialTemperature());
+  //Serial.print("Raw: ");
+  //Serial.print(getDialRaw());
+  //Serial.print("  Dial set temp: ");
+  //Serial.println(getDialTemperature());
 
 //  if (minTemp > temperature) {
 //    minTemp = temperature;
@@ -194,5 +199,16 @@ void lcdTest(){
   lcd.setCursor(0,0); // Set cursor to first row left
   lcd.print("Ruth is lovely");
   lcd.setCursor(0,2); // Set cursor to second row left
+}
+
+int switchSetting() {
+  int analogValue = analogRead(SWITCH_3WAY);
+ 
+  int actualState;
+  if(analogValue < 100) actualState = 1;
+  else if(analogValue < 900) actualState = 2;
+  else actualState = 0;
+
+  return actualState;
 }
 
