@@ -206,6 +206,7 @@ void setup()
    //Particle.function("probeTemp", debugProbeTemp); // Uncomment this line to enable the ability to set the "temperature" yourself
    Particle.function("targetTemp", setTargetTemp);
    Particle.function("resetMinMax", resetMinMaxTemp);
+   Particle.function("logTempNow", logTempNow);
    
    // Register the set beer temperature, current termperature and Min/Max temperature so they appear in the API
    Particle.variable("currentTemp", temperature);
@@ -311,5 +312,11 @@ int resetMinMaxTemp(String command) {
     maxTemp = -9999;
 
     Particle.publish("reset-minmax-temperature", NULL, 60, PRIVATE); // Log event
+    return 1;
+}
+
+// This function immediately logs the temperature as an event (for testing / DEBUG)
+int logTempNow(String command) {
+    Particle.publish("current-temperature", String(temperature), 60, PRIVATE); // Log event
     return 1;
 }
