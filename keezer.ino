@@ -51,7 +51,7 @@ unsigned long lastCycledTime = 0;     // Stores the last time cycled
 unsigned long cycleDelta = 15 * 60 * 1000L; // Stores the min allowed cycle time (10 minutes?) Default: 15 * 60 * 1000L
 
 unsigned long lastLogTime[3] = {0, 0, 0};     // Stores the last time a log was created
-unsigned long logDelta[3] = {5 * 60 * 1000L, 30 * 60 * 1000L, 10 * 60 * 1000L} ; // Stores the min allowed logging interval. See Logging Configuration for descriptions
+unsigned long logDelta[3] = {5 * 60 * 1000L, 10 * 60 * 1000L, 10 * 60 * 1000L} ; // Stores the min allowed logging interval. See Logging Configuration for descriptions
 
 double temperature = 7.5;            // Storage for the current temperature from the sensor
 
@@ -260,8 +260,8 @@ void control() {
         }
     }
     else {
-        // Unable to read sensor - log if not logged in last 1 minute
-        logEvent("sensor-read-error", String(NULL), LOG_SENSOR);
+        // Unable to read sensor
+        // logEvent("sensor-read-error", String(NULL), LOG_SENSOR);
     }
 }
 
