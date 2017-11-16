@@ -109,7 +109,7 @@ void turnFreezerOff() {
 void forceTurnFreezerOff() {
     lastCycledTime = millis();
     relayState = HIGH;
-    // digitalWrite(RELAY_PIN, !relayState);
+    digitalWrite(RELAY_PIN, !relayState);
     digitalWrite(LED_PIN, !relayState);
     
     Particle.publish("freezer-OFF", String(temperature), 60, PRIVATE); // Log an event
@@ -120,7 +120,7 @@ void forceTurnFreezerOn() {
     lastCycledTime = millis();
     relayState = LOW;
     beenOn = 1;
-    // digitalWrite(RELAY_PIN, !relayState);
+    digitalWrite(RELAY_PIN, !relayState);
     digitalWrite(LED_PIN, !relayState);
     
     Particle.publish("freezer-ON", String(temperature), 60, PRIVATE); // Log an event
@@ -200,7 +200,7 @@ void setup()
 {
    // Declare pins
    pinMode(LED_PIN, OUTPUT);
-   //pinMode(RELAY_PIN, OUTPUT);
+   pinMode(RELAY_PIN, OUTPUT);
 
    // Create API function call backs
    //Particle.function("probeTemp", debugProbeTemp); // Uncomment this line to enable the ability to set the "temperature" yourself
